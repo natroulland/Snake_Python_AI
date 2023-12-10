@@ -82,3 +82,40 @@ class Reseau:
                 self.couche[couche] += nbr
         else:
             print('Erreur : le réseau est déjà initialisé')
+    
+    def add_all_neurone(self, tab):
+        if (self.control == 0):
+            if (len(tab) == len(self.couche)):
+                for i in range(0, len(tab)):
+                    self.couche[i] += tab[i]
+            else:
+                print('Erreur : le tableau doit contenir', len(self.couche), 'valeurs')
+        else:
+            print('Erreur : le réseau est déjà initialisé')
+    
+    def creer_reseau(self):
+        test = 0
+        for j in range(0, len(self.couche)):
+            if (self.couche[j] <= 0): # verifie que le nombre de neurones par couche est supérieur à 0
+                test = 1
+        if test != 1 : 
+            if self.control == 0:
+                self.control = 1 # empeche de modifier les poids du réseau si il a deja été initialisé
+                for i in range(0, len(self.couche)):
+                    add = []
+                    add_link = []
+                    add_values = []
+                    for j in range(0, self.couche[i]):
+                        if i!=len(self.couche)-1: #Pour ne pas créer de liens à la derniere couche
+                            for k in range(0, self.couche[i+1]):
+                               add_link.append(0.5)
+                            add.append(add_link)
+                            add_link = []
+                        add_values.append(0)
+                    if(i!=len(self.couche)-1):
+                        self.link.append(add)
+                    self.values.append(add_values)
+                else:
+                    print('Erreur : le réseau est déjà initialisé')
+        else:
+            print('Erreur : le réseau n\'est pas correctement initialisé')
