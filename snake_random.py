@@ -27,6 +27,7 @@ GREEN2 = (178, 255, 102)
 
 BLOCK_SIZE = 64
 SPEED = 20
+MAX_STEPS = 100
 
 class SnakeGame:
     
@@ -65,15 +66,7 @@ class SnakeGame:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-        #     if event.type == pygame.KEYDOWN:
-        #         if event.key == pygame.K_LEFT:
-        #             self.direction = Direction.LEFT
-        #         elif event.key == pygame.K_RIGHT:
-        #             self.direction = Direction.RIGHT
-        #         elif event.key == pygame.K_UP:
-        #             self.direction = Direction.UP
-        #         elif event.key == pygame.K_DOWN:
-        #             self.direction = Direction.DOWN
+
         if input == 1:
             self.direction = Direction.RIGHT
         elif input == 2:
@@ -89,7 +82,7 @@ class SnakeGame:
         
         # 3. check if game over
         game_over = False
-        if self._is_collision() or self.steps == 20:
+        if self._is_collision() or self.steps == MAX_STEPS:
             game_over = True
             return game_over, self.score
             

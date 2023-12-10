@@ -26,6 +26,7 @@ GREEN2 = (178, 255, 102)
 
 BLOCK_SIZE = 64
 SPEED = 10
+MAX_STEPS = 100
 
 class SnakeGame:
     
@@ -80,7 +81,7 @@ class SnakeGame:
         
         # 3. check if game over
         game_over = False
-        if self._is_collision() or self.steps == 20:
+        if self._is_collision() or self.steps == MAX_STEPS:
             game_over = True
             return game_over, self.score
             
