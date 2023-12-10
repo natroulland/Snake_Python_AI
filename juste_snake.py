@@ -32,6 +32,8 @@ class SnakeGame:
     def __init__(self, w=640, h=640):
         self.w = w
         self.h = h
+        self.steps = 0
+        self.total_steps = 0
         # init display
         self.display = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption('Snake')
@@ -78,12 +80,13 @@ class SnakeGame:
         
         # 3. check if game over
         game_over = False
-        if self._is_collision():
+        if self._is_collision() or self.steps == 20:
             game_over = True
             return game_over, self.score
             
         # 4. place new food or just move
         if self.head == self.food:
+            self.steps = 0
             self.score += 1
             self._place_food()
         else:
@@ -146,11 +149,17 @@ if __name__ == '__main__':
         # game loop
         while True:
             game_over, score = game.play_step()
-            
+            game.steps += 1
+            game.total_steps += 1
             if game_over == True:
+                game.steps = 0
                 break
             
+        print('-------------------------------------')
         print('Final Score', score)
+        print('Total Steps', game.total_steps)
+        print('Fitness = ', (score*score) * (1/(game.total_steps))) # Score de fitness pour comparer les individus
+        
             
         
     pygame.quit()
