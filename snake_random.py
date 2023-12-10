@@ -2,6 +2,7 @@ import pygame
 import random
 from enum import Enum
 from collections import namedtuple
+import matplotlib.pyplot as plt
 
 pygame.init()
 
@@ -25,7 +26,7 @@ GREEN1 = (153, 255, 51)
 GREEN2 = (178, 255, 102)
 
 BLOCK_SIZE = 64
-SPEED = 10
+SPEED = 20
 
 class SnakeGame:
     
@@ -58,21 +59,29 @@ class SnakeGame:
         if self.food in self.snake:
             self._place_food()
         
-    def play_step(self):
+    def play_step(self, input):
         # 1. collect user input
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    self.direction = Direction.LEFT
-                elif event.key == pygame.K_RIGHT:
-                    self.direction = Direction.RIGHT
-                elif event.key == pygame.K_UP:
-                    self.direction = Direction.UP
-                elif event.key == pygame.K_DOWN:
-                    self.direction = Direction.DOWN
+        #     if event.type == pygame.KEYDOWN:
+        #         if event.key == pygame.K_LEFT:
+        #             self.direction = Direction.LEFT
+        #         elif event.key == pygame.K_RIGHT:
+        #             self.direction = Direction.RIGHT
+        #         elif event.key == pygame.K_UP:
+        #             self.direction = Direction.UP
+        #         elif event.key == pygame.K_DOWN:
+        #             self.direction = Direction.DOWN
+        if input == 1:
+            self.direction = Direction.RIGHT
+        elif input == 2:
+            self.direction = Direction.LEFT
+        elif input == 3:
+            self.direction = Direction.UP
+        elif input == 4:
+            self.direction = Direction.DOWN
         
         # 2. move
         self._move(self.direction) # update the head
@@ -151,12 +160,14 @@ class SnakeGame:
             
 
 if __name__ == '__main__':
-    for i in range(10):
+    essais = range(100)
+    fit = []
+    for i in essais:
         game = SnakeGame()
-        
         # game loop
         while True:
-            game_over, score = game.play_step()
+            j = random.randint(1, 3)
+            game_over, score = game.play_step(j)
             game.steps += 1
             game.total_steps += 1
             if game_over == True:
@@ -166,8 +177,15 @@ if __name__ == '__main__':
         print('-------------------------------------')
         print('Final Score', score)
         print('Total Steps', game.total_steps)
-        print('Fitness = ', (score*score) * (1/(game.total_steps))) # Score de fitness pour comparer les individus
-        
-            
+        fitness = (score*score) * (1/(game.total_steps))
+        fit.append(fitness)
+        print('Fitness = ', fitness) # Score de fitness pour comparer les individus
         
     pygame.quit()
+    plt.scatter(essais, fit, marker = 'o')
+    plt.title('Scores en fonction du numéro de l\'essai')
+    plt.xlabel('Numéro de l\'essai')
+    plt.ylabel('Score')
+    plt.show()
+        
+    
