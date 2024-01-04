@@ -12,7 +12,7 @@ class SnakeTrainer:
         self.totalGenScore = 0
         self.bestGenScore = 0
         self.nbrSnakes = 100
-        self.survivalProportion = 0.2
+        self.survivalProportion = 0.05
         self.mutationRate = 0.2
         self.snakes = [Snake(ADN()) for i in range(self.nbrSnakes)]
         self.bestSnake = self.snakes[0]
@@ -45,7 +45,7 @@ class SnakeTrainer:
 
     def change_generation(self):
         newSnakes = sorted(self.snakes, key=lambda x: x.fitness, reverse=True)
-        newSnakes = newSnakes[:int(self.nbrSnakes*self.survivalProportion)]
+        newSnakes = newSnakes[:int(self.nbrSnakes*1-self.survivalProportion)]
 
         while len(newSnakes) < self.nbrSnakes:
             parents = self.select_parents(newSnakes)
@@ -99,6 +99,7 @@ class SnakeTrainer:
                     game.steps = 0
                     break
             fitness = (score*score) * (1/(game.total_steps))
+            snake.fitness = fitness
 
 
             self.bestGenFitness = max([fitness, self.bestGenFitness])
