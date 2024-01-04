@@ -25,7 +25,7 @@ GREEN1 = (153, 255, 51)
 GREEN2 = (178, 255, 102)
 
 BLOCK_SIZE = 64
-SPEED = 10
+SPEED = 7
 MAX_STEPS = 100
 
 class SnakeGame:
@@ -67,13 +67,25 @@ class SnakeGame:
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    self.direction = Direction.LEFT
+                    if self.direction == Direction.RIGHT:
+                        self.direction = Direction.RIGHT
+                    else:
+                        self.direction = Direction.LEFT
                 elif event.key == pygame.K_RIGHT:
-                    self.direction = Direction.RIGHT
+                    if self.direction == Direction.LEFT:
+                        self.direction = Direction.LEFT
+                    else:
+                        self.direction = Direction.RIGHT
                 elif event.key == pygame.K_UP:
-                    self.direction = Direction.UP
+                    if self.direction == Direction.DOWN:
+                        self.direction = Direction.DOWN
+                    else:
+                        self.direction = Direction.UP
                 elif event.key == pygame.K_DOWN:
-                    self.direction = Direction.DOWN
+                    if self.direction == Direction.UP:
+                        self.direction = Direction.UP
+                    else:
+                        self.direction = Direction.DOWN
         
         # 2. move
         self._move(self.direction) # update the head
@@ -93,12 +105,65 @@ class SnakeGame:
         else:
             self.snake.pop()
         
+
+        self.vision()
+
         # 5. update ui and clock
         self._update_ui()
         self.clock.tick(SPEED)
+
+
         # 6. return game over and score
         return game_over, self.score
     
+    def vision(self):
+            direction0 = self.head.y/64 # Calcule la distance entre la tête du serpent et le haut de la grille
+            direction2 = 9-direction0 # Calcule la distance entre la tête du serpent et le bas de la grille
+            direction3 = self.head.x/64
+            direction1 = 9-direction3
+            direction4 = min(direction0, direction1)
+            direction5 = min(direction1, direction2)
+            direction6 = min(direction2, direction3)
+            direction7 = min(direction3, direction0)
+
+            self.x = self.head.x
+            self.y = self.head.y
+            
+            directions = [int(direction0), int(direction1), int(direction2), int(direction3), int(direction4), int(direction5), int(direction6), int(direction7)]
+            movements = [(0, -64), (64, 0), (0, 64), (-64, 0), (64, -64), (64, 64), (-64, 64), (-64, -64)]
+            messages = ["Pomme dans la direction 0", "Pomme dans la direction 1", "Pomme dans la direction 2", "Pomme dans la direction 3", "Pomme dans la direction 4", "Pomme dans la direction 5", "Pomme dans la direction 6", "Pomme dans la direction 7"]
+            messages2 = ["Corps dans la direction 0", "Corps dans la direction 1", "Corps dans la direction 2", "Corps dans la direction 3", "Corps dans la direction 4", "Corps dans la direction 5", "Corps dans la direction 6", "Corps dans la direction 7"]
+
+            for direction, (dx, dy), message in zip(directions, movements, messages):
+                for i in range(direction):
+                    self.x += dx
+                    self.y += dy
+
+                    if self.x == self.food.x and self.y == self.food.y:
+                        print(message)
+                        self.x = self.head.x
+                        self.y = self.head.y
+                        break
+                else:
+                    self.x = self.head.x
+                    self.y = self.head.y
+
+            for direction, (dx, dy), message in zip(directions, movements, messages2):
+                for i in range(direction):
+                    self.x += dx
+                    self.y += dy
+                    case = Point(self.x, self.y)
+                    if case in self.snake[1:]:
+                        print(message)
+                        self.x = self.head.x
+                        self.y = self.head.y
+                        break
+                else:
+                    self.x = self.head.x
+                    self.y = self.head.y
+
+
+
     def _is_collision(self):
         # hits boundary
         if self.head.x > self.w - BLOCK_SIZE or self.head.x < 0 or self.head.y > self.h - BLOCK_SIZE or self.head.y < 0:

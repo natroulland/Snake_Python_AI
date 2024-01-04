@@ -68,13 +68,25 @@ class SnakeGame:
                 quit()
 
         if input == 1:
-            self.direction = Direction.RIGHT
+            if self.direction == Direction.LEFT:
+                        self.direction = Direction.LEFT
+            else:
+                self.direction = Direction.RIGHT
         elif input == 2:
-            self.direction = Direction.LEFT
+            if self.direction == Direction.RIGHT:
+                self.direction = Direction.RIGHT
+            else:
+                self.direction = Direction.LEFT
         elif input == 3:
-            self.direction = Direction.UP
+            if self.direction == Direction.DOWN:
+                self.direction = Direction.DOWN
+            else:
+                self.direction = Direction.UP
         elif input == 4:
-            self.direction = Direction.DOWN
+            if self.direction == Direction.UP:
+                self.direction = Direction.UP
+            else:
+                self.direction = Direction.DOWN
         
         # 2. move
         self._move(self.direction) # update the head
@@ -94,9 +106,13 @@ class SnakeGame:
         else:
             self.snake.pop()
         
+        self.vision()
+
         # 5. update ui and clock
         self._update_ui()
         self.clock.tick(SPEED)
+
+        
         # 6. return game over and score
         return game_over, self.score
     
@@ -109,6 +125,70 @@ class SnakeGame:
             return True
         
         return False
+
+    def vision(self):
+            vision = []
+            direction0 = self.head.y/64 # Calcule la distance entre la tête du serpent et le haut de la grille
+            direction2 = 9-direction0 # Calcule la distance entre la tête du serpent et le bas de la grille
+            direction3 = self.head.x/64
+            direction1 = 9-direction3
+            direction4 = min(direction0, direction1)
+            direction5 = min(direction1, direction2)
+            direction6 = min(direction2, direction3)
+            direction7 = min(direction3, direction0)
+
+            self.x = self.head.x
+            self.y = self.head.y
+            
+            
+            directions = [int(direction0), int(direction1), int(direction2), int(direction3), int(direction4), int(direction5), int(direction6), int(direction7)]
+            movements = [(0, -64), (64, 0), (0, 64), (-64, 0), (64, -64), (64, 64), (-64, 64), (-64, -64)]
+            for direction in directions:
+                vision.append(direction)
+
+            for direction, (dx, dy) in zip(directions, movements):
+                for i in range(direction):
+                    self.x += dx
+                    self.y += dy
+
+                    if self.x == self.food.x and self.y == self.food.y:
+                        vision.append(1)
+                        self.x = self.head.x
+                        self.y = self.head.y
+                        break
+                else:
+                    self.x = self.head.x
+                    self.y = self.head.y
+                    vision.append(0)
+
+            for direction, (dx, dy) in zip(directions, movements):
+                for i in range(direction):
+                    self.x += dx
+                    self.y += dy
+                    case = Point(self.x, self.y)
+                    if case in self.snake[1:]:
+                        vision.append(1)
+                        self.x = self.head.x
+                        self.y = self.head.y
+                        break
+                else:
+                    self.x = self.head.x
+                    self.y = self.head.y
+                    vision.append(0)
+            
+            vision.append(1 if self.direction == Direction.UP else 0)
+            vision.append(1 if self.direction == Direction.DOWN else 0)
+            vision.append(1 if self.direction == Direction.LEFT else 0)
+            vision.append(1 if self.direction == Direction.RIGHT else 0)
+
+            self.x = self.snake[-1].x
+            self.y = self.snake[-1].y
+
+            vision.append(1 if Point(self.x, self.y-64) == self.snake[-2] else 0)
+            vision.append(1 if Point(self.x, self.y+64) == self.snake[-2] else 0)
+            vision.append(1 if Point(self.x-64, self.y) == self.snake[-2] else 0)
+            vision.append(1 if Point(self.x+64, self.y) == self.snake[-2] else 0)    
+            return vision
         
     def _update_ui(self):
         for y in range(0, self.h, BLOCK_SIZE):
@@ -150,35 +230,26 @@ class SnakeGame:
             y -= BLOCK_SIZE
             
         self.head = Point(x, y)
-            
+
+
+def main():
+    game = SnakeGame()
+    # game loop
+    while True:
+        game_over, score = game.play_step()
+        game.steps += 1
+        game.total_steps += 1
+        if game_over == True:
+            game.steps = 0
+            break
+        
+    print('-------------------------------------')
+    print('Final Score', score)
+    print('Total Steps', game.total_steps)
+    fitness = (score*score) * (1/(game.total_steps))
+    print('Fitness = ', fitness) # Score de fitness pour comparer les individus
 
 if __name__ == '__main__':
-    essais = range(100)
-    fit = []
-    for i in essais:
-        game = SnakeGame()
-        # game loop
-        while True:
-            j = random.randint(1, 3)
-            game_over, score = game.play_step(j)
-            game.steps += 1
-            game.total_steps += 1
-            if game_over == True:
-                game.steps = 0
-                break
-            
-        print('-------------------------------------')
-        print('Final Score', score)
-        print('Total Steps', game.total_steps)
-        fitness = (score*score) * (1/(game.total_steps))
-        fit.append(fitness)
-        print('Fitness = ', fitness) # Score de fitness pour comparer les individus
-        
-    pygame.quit()
-    plt.scatter(essais, fit, marker = 'o')
-    plt.title('Scores en fonction du numéro de l\'essai')
-    plt.xlabel('Numéro de l\'essai')
-    plt.ylabel('Score')
-    plt.show()
+    main()
         
     

@@ -115,8 +115,8 @@ class Reseau:
                     if(i!=len(self.couche)-1):
                         self.link.append(add)
                     self.values.append(add_values)
-                else:
-                    print('Erreur : le réseau est déjà initialisé')
+            else:
+                print('Erreur : le réseau est déjà initialisé')
         else:
             print('Erreur : le réseau n\'est pas correctement initialisé')
 
@@ -135,27 +135,6 @@ class Reseau:
                 print('Erreur : le tableau doit contenir', self.couche[0], 'valeurs')
         else:
             print('Erreur : le réseau n\'est pas initialisé')
-    
-    def retropropagaration(self, tab):
-        if (len(tab) == len(self.values[len(self.values)-1])):
-            for i in range(0, len(tab)):
-                self.values[len(self.values)-1][i] = tab[i] #On stocke la différence entre la valeur attendue (tab) et la valeur trouvée
-            for i in range(len(self.values)-1, 0, -1): # parcours les couches
-                for j in range (0, len(self.values[i-1])):
-                    for k in range(0, len(self.link[i-1][j])):
-                        somme = 0
-                        for l in range(0, len(self.values[i-1])):
-                            #On effectue la somme du neurone vers lequel pointe la connection avec le neurone de base
-                            somme += self.values[i-1][l] * self.link[i-1][l][k]
-                        somme = self.fun_learn
-                         #On met à jour le poids de la connection
-                        self.link[i-l][j][k] -= self.getError() * (-1 * self.values[i][k] * somme * (1-somme) * self.values[i-1][j])
-                    for j in range(0, len(self.values[i-1])):
-                        somme = 0
-                        for k in range(0, len(self.values[i])):
-                            #On met à jour les neurones de la prochaine couche en fonction de l'erreur
-                            somme += self.values[i-1][j] * self.link[i-1][j][k]
-                        self.values[i-1][j] = somme
     
     def learn(self, entree, sortie):
         if (self.control == 1):
@@ -190,7 +169,7 @@ class Reseau:
             i += 1
             print(each)
 
-    def print_leak(self):
+    def print_link(self):
         i = 1
         for each in self.link:
             print('Couche', i, ':', each)
