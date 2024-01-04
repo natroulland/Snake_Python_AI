@@ -1,2 +1,0 @@
-import snake_random
-import pygame

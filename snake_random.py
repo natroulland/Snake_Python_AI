@@ -26,23 +26,25 @@ GREEN1 = (153, 255, 51)
 GREEN2 = (178, 255, 102)
 
 BLOCK_SIZE = 64
-SPEED = 20
+SPEED = 10000
 MAX_STEPS = 100
 
 class SnakeGame:
     
-    def __init__(self, w=640, h=640):
+    def __init__(self, w=640, h=640, training = False, generation = 0):
         self.w = w
         self.h = h
         self.steps = 0
         self.total_steps = 0
+        self.training = training
+        self.generation = generation
         # init display
         self.display = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
         
+        self.direction = None
         # init game state
-        self.direction = Direction.RIGHT
         
         self.head = Point(self.w/2, self.h/2)
         self.snake = [self.head, 
@@ -214,7 +216,10 @@ class SnakeGame:
         pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
         
         text = font.render("Score: " + str(self.score), True, BLACK)
+        text2 = font.render("Génération : " + str(self.generation), True, BLACK)
         self.display.blit(text, [0, 0])
+        if self.training:
+            self.display.blit(text2, [0, 30])
         pygame.display.flip()
         
     def _move(self, direction):
@@ -246,7 +251,7 @@ def main():
     print('-------------------------------------')
     print('Final Score', score)
     print('Total Steps', game.total_steps)
-    fitness = (score*score) * (1/(game.total_steps))
+    fitness = (score*score) * game.total_steps
     print('Fitness = ', fitness) # Score de fitness pour comparer les individus
 
 if __name__ == '__main__':
