@@ -3,10 +3,6 @@ import random
 from enum import Enum
 from collections import namedtuple
 
-pygame.init()
-
-font = pygame.font.SysFont('arial', 25)
-
 class Direction(Enum):
     RIGHT = 1
     LEFT = 2
@@ -217,6 +213,9 @@ class SnakeGame:
             
 
 if __name__ == '__main__':
+    pygame.init()
+    font = pygame.font.SysFont('arial', 25)
+
     for i in range(10):
         game = SnakeGame()
         
