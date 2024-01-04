@@ -1,16 +1,17 @@
 import snake_random
-from snake import Snaker
+from adn import ADN
+from snake import Snake
 
 class SnakeTrainer:
     def __init__(self):
-        feur = Snaker(1)
+        self.snakes = [Snake(ADN()) for i in range(100)]
     
-    def training(self):
+    def playing(self):
         game = snake_random.SnakeGame()
         # game loop
         while True:
             vision = game.vision()
-            j = Snaker.choose_move(vision)
+            j = self.feur.choose_move(vision)
             game_over, score = game.play_step(j)
             game.steps += 1
             game.total_steps += 1
@@ -26,4 +27,4 @@ class SnakeTrainer:
     
 if __name__ == "__main__":
     trainer = SnakeTrainer()
-    trainer.training()
+    trainer.playing()

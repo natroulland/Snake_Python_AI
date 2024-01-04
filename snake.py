@@ -1,11 +1,19 @@
 import random
 
-class Snaker:
-    def __init__(self, reseau):
+class Snake:
+    def __init__(self, adn):
         self.fitness = 0
-        self.reseau = reseau
+        self.adn = adn
 
-    def choose_move(vision):
-        j = random.randint(1, 4)
-        print(vision)
-        return j
+    def choose_move(self, vision):
+        move = self.adn.getOutput(vision)
+        move = move.tolist()
+        print(move)
+        choice = 0
+
+        for i in range(1,len(move[0])):
+            print(i)
+            if move[0][i] > move[0][choice]:
+                choice = i
+        print(choice)
+        return choice
