@@ -26,7 +26,7 @@ GREEN1 = (153, 255, 51)
 GREEN2 = (178, 255, 102)
 
 BLOCK_SIZE = 64
-SPEED = 10000
+SPEED = 15
 MAX_STEPS = 100
 
 class SnakeGame:
@@ -43,13 +43,13 @@ class SnakeGame:
         pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
         
-        self.direction = None
+        self.direction = Direction.RIGHT
         # init game state
         
         self.head = Point(self.w/2, self.h/2)
         self.snake = [self.head, 
-                      Point(self.head.x, self.head.y-BLOCK_SIZE),
-                      Point(self.head.x, self.head.y-(2*BLOCK_SIZE))]
+                      Point(self.head.x-BLOCK_SIZE, self.head.y),
+                      Point(self.head.x-(2*BLOCK_SIZE), self.head.y)]
         
         self.score = 0
         self.food = None
@@ -107,8 +107,6 @@ class SnakeGame:
             self._place_food()
         else:
             self.snake.pop()
-        
-        self.vision()
 
         # 5. update ui and clock
         self._update_ui()
@@ -146,15 +144,15 @@ class SnakeGame:
             directions = [int(direction0), int(direction1), int(direction2), int(direction3), int(direction4), int(direction5), int(direction6), int(direction7)]
             movements = [(0, -64), (64, 0), (0, 64), (-64, 0), (64, -64), (64, 64), (-64, 64), (-64, -64)]
             for direction in directions:
-                vision.append(direction)
+                vision.append(direction+1)
 
             for direction, (dx, dy) in zip(directions, movements):
-                for i in range(direction):
+                for i in range(1, direction+1):
                     self.x += dx
                     self.y += dy
 
                     if self.x == self.food.x and self.y == self.food.y:
-                        vision.append(1)
+                        vision.append(i)
                         self.x = self.head.x
                         self.y = self.head.y
                         break
@@ -164,12 +162,12 @@ class SnakeGame:
                     vision.append(0)
 
             for direction, (dx, dy) in zip(directions, movements):
-                for i in range(direction):
+                for i in range(1, direction+1):
                     self.x += dx
                     self.y += dy
                     case = Point(self.x, self.y)
                     if case in self.snake[1:]:
-                        vision.append(1)
+                        vision.append(i)
                         self.x = self.head.x
                         self.y = self.head.y
                         break

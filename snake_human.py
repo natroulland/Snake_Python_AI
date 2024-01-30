@@ -113,6 +113,7 @@ class SnakeGame:
         return game_over, self.score
     
     def vision(self):
+            vision = []
             direction0 = self.head.y/64 # Calcule la distance entre la tête du serpent et le haut de la grille
             direction2 = 9-direction0 # Calcule la distance entre la tête du serpent et le bas de la grille
             direction3 = self.head.x/64
@@ -125,38 +126,56 @@ class SnakeGame:
             self.x = self.head.x
             self.y = self.head.y
             
+            
             directions = [int(direction0), int(direction1), int(direction2), int(direction3), int(direction4), int(direction5), int(direction6), int(direction7)]
             movements = [(0, -64), (64, 0), (0, 64), (-64, 0), (64, -64), (64, 64), (-64, 64), (-64, -64)]
-            messages = ["Pomme dans la direction 0", "Pomme dans la direction 1", "Pomme dans la direction 2", "Pomme dans la direction 3", "Pomme dans la direction 4", "Pomme dans la direction 5", "Pomme dans la direction 6", "Pomme dans la direction 7"]
-            messages2 = ["Corps dans la direction 0", "Corps dans la direction 1", "Corps dans la direction 2", "Corps dans la direction 3", "Corps dans la direction 4", "Corps dans la direction 5", "Corps dans la direction 6", "Corps dans la direction 7"]
+            for direction in directions:
+                vision.append(direction+1)
 
-            for direction, (dx, dy), message in zip(directions, movements, messages):
-                for i in range(direction):
+            for direction, (dx, dy) in zip(directions, movements):
+                for i in range(1, direction+1):
                     self.x += dx
                     self.y += dy
 
                     if self.x == self.food.x and self.y == self.food.y:
-                        print(message)
+                        vision.append(i)
                         self.x = self.head.x
                         self.y = self.head.y
                         break
                 else:
                     self.x = self.head.x
                     self.y = self.head.y
+                    vision.append(0)
 
-            for direction, (dx, dy), message in zip(directions, movements, messages2):
-                for i in range(direction):
+            for direction, (dx, dy) in zip(directions, movements):
+                for i in range(1, direction+1):
                     self.x += dx
                     self.y += dy
                     case = Point(self.x, self.y)
                     if case in self.snake[1:]:
-                        print(message)
+                        vision.append(i)
                         self.x = self.head.x
                         self.y = self.head.y
                         break
                 else:
                     self.x = self.head.x
                     self.y = self.head.y
+                    vision.append(0)
+            
+            vision.append(1 if self.direction == Direction.UP else 0)
+            vision.append(1 if self.direction == Direction.DOWN else 0)
+            vision.append(1 if self.direction == Direction.LEFT else 0)
+            vision.append(1 if self.direction == Direction.RIGHT else 0)
+
+            self.x = self.snake[-1].x
+            self.y = self.snake[-1].y
+
+            vision.append(1 if Point(self.x, self.y-64) == self.snake[-2] else 0)
+            vision.append(1 if Point(self.x, self.y+64) == self.snake[-2] else 0)
+            vision.append(1 if Point(self.x-64, self.y) == self.snake[-2] else 0)
+            vision.append(1 if Point(self.x+64, self.y) == self.snake[-2] else 0)    
+            print(vision)
+            return vision
 
 
 

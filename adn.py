@@ -5,13 +5,13 @@ import copy
 class ADN :
     def __init__(self, weights = None, bias = None):
         self.weights = copy.deepcopy(weights)
-        self.bias = copy.deepcopy(bias)
-        self.layerssize = [16, 8, 4]
+        # self.bias = copy.deepcopy(bias)
+        self.layerssize = [20, 12, 4]
 
         if weights == None :
             self.setWeights()
-        if bias == None :
-            self.setBias()
+        # if bias == None :
+        #     self.setBias()
     
     def setWeights(self):
         self.weights = []
@@ -31,25 +31,30 @@ class ADN :
             nbrBias = np.size(layer, 1)
             self.bias.append(np.array([rd.gauss(0, 0.5) for i in range(nbrBias)]))
 
+    def relu(self, x):
+        return np.maximum(0, x)
+
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+    
+    def tanh(self, x):
+        return np.tanh(x)
+
     def getOutput(self, input): #avec input la vision du serpent récupérée dans trainer.py
-        weights = []
-        for layer in range(len(self.bias)):
-            weights.append(np.vstack((self.weights[layer], self.bias[layer])))
-        
-        outputs = np.matrix([input])
-        for layerWeights in weights:
-            outputs = self.addBias(outputs)
-            outputs = outputs.dot(layerWeights)
-            outputs[outputs < 0] = 0  # Relu function
-        return outputs
+       
+        output = input
+        for i in range(len(self.weights)):
+            output = self.tanh(np.dot(output, self.weights[i])) #+ self.bias[i])
+        return output
+    
 
     def addBias(self, val):
         return np.column_stack((val, np.matrix([[1]])))
 
     def mix(self, other, mutationRate):
         newWeights = self.crossover(self.weights, other.weights)
-        newBias = self.crossover(self.bias, other.bias)
-        newAdn = ADN(newWeights, newBias)
+        # newBias = self.crossover(self.bias, other.bias)
+        newAdn = ADN(newWeights, 0)#newBias)
         newAdn.mutate(mutationRate)
         return newAdn
 
@@ -87,10 +92,5 @@ class ADN :
             self.mutate_layer(layer, mutationRate)
 
         # Mutation of the bias
-        for layer in self.bias:
-            self.mutate_layer(layer, mutationRate)
-
-
-if __name__ == "__main__" : 
-    adn = ADN()
-    adn.getOutput([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        # for layer in self.bias:
+        #     self.mutate_layer(layer, mutationRate)
