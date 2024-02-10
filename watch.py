@@ -4,7 +4,7 @@ import random as rd
 from os import listdir
 import pickle
 from pathlib import Path
-import snake_random
+import game
 
 class Watch : 
     def __init__(self):
@@ -17,7 +17,7 @@ class Watch :
 
     def playing(self):
         for i in range(10):
-            game = snake_random.SnakeGame(training = False, generation = 0)
+            game = game.SnakeGame(training = False, generation = 0)
             # game loop
             while True:
                 vision = game.vision()

@@ -1,4 +1,4 @@
-import snake_random
+from game import SnakeGame
 from adn import ADN
 from snake import Snake
 import random as rd
@@ -6,7 +6,7 @@ from os import listdir
 import pickle
 from pathlib import Path
 import add_values
-import save_training
+
 
 class SnakeTrainer:
     def __init__(self, snakes = None):
@@ -33,7 +33,7 @@ class SnakeTrainer:
         itEnd = 0
 
         # Create new generations until the stop condition is satisfied
-        while itEnd < 250:
+        while self.generation < 200:
             print(
                 f"Generation {self.generation}, best: {bestScore}, bestfit: {bestFitness}"
             )
@@ -98,7 +98,7 @@ class SnakeTrainer:
 
     def playing(self):
         for snake in self.snakes:
-            game = snake_random.SnakeGame(training = True, generation = self.generation)
+            game = SnakeGame(training = True, generation = self.generation)
             # game loop
             while True:
                 vision = game.vision()
@@ -127,7 +127,7 @@ class SnakeTrainer:
         print("Average score : ", self.totalGenScore/self.nbrSnakes)
         print("Total Score : ", self.totalGenScore)
         # Lire les nouvelles valeurs depuis l'utilisateur
-        nouvelles_valeurs = [self.generation, self.bestGenScore]
+        nouvelles_valeurs = [self.generation, float(self.totalGenScore/self.nbrSnakes)]
 
         add_values.inscrire_et_modifier("valeurs_graphes.txt", nouvelles_valeurs)
 
