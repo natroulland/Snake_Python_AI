@@ -4,7 +4,7 @@ import random as rd
 from os import listdir
 import pickle
 from pathlib import Path
-import game
+from game import SnakeGame 
 
 class Watch : 
     def __init__(self): #Initialise les paramètres de la visualisation
@@ -17,7 +17,7 @@ class Watch :
 
     def playing(self): # Permet de visualiser le serpent jouer
         for i in range(10):
-            game = game.SnakeGame(training = False, generation = 0)
+            game = SnakeGame(training = False, generation = 0)
             # game loop
             while True:
                 vision = game.vision()

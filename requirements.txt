@@ -1,0 +1,7 @@
+pygame
+matplotlib
+numpy
+enum
+collections
+pickle
+pathlib

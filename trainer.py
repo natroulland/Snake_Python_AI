@@ -8,7 +8,7 @@ from pathlib import Path
 import add_values
 
 
-class SnakeTrainer:
+class SnakeTrainer :
     def __init__(self, snakes = None): #Initialise les paramètres de l'entraînement
         self.bestFitness = 0
         self.bestScore = 0
