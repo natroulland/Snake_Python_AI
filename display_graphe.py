@@ -13,9 +13,9 @@ def lire_fichier(nom_fichier):
         return []
 
 def generer_graphique():
-    valeurs_sigmoid = lire_fichier("valeurs_graphes_sigmoid.txt")
-    valeurs_tanh = lire_fichier("valeurs_graphes_tanh.txt")
-    valeurs_relu = lire_fichier("valeurs_graphes_relu.txt")
+    valeurs_sigmoid = lire_fichier("graphs/valeurs_graphes_sigmoid.txt")
+    valeurs_tanh = lire_fichier("graphs/valeurs_graphes_tanh.txt")
+    valeurs_relu = lire_fichier("graphs/valeurs_graphes_relu.txt")
 
     if not valeurs_sigmoid or not valeurs_tanh or not valeurs_relu:
         return
