@@ -16,7 +16,7 @@ class SnakeTrainer :
         self.generation = 1
         self.totalGenScore = 0
         self.bestGenScore = 0
-        self.nbrSnakes = 1000
+        self.nbrSnakes = 500
         self.survivalProportion = 0.12
         self.mutationRate = 0.05
         self.snakes = snakes
