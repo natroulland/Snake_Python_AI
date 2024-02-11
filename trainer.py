@@ -16,7 +16,7 @@ class SnakeTrainer:
         self.generation = 1
         self.totalGenScore = 0
         self.bestGenScore = 0
-        self.nbrSnakes = 500
+        self.nbrSnakes = 1000
         self.survivalProportion = 0.12
         self.mutationRate = 0.05
         self.snakes = snakes
@@ -104,7 +104,7 @@ class SnakeTrainer:
                 if game_over == True:
                     game.steps = 0
                     break
-            fitness = 7*score/game.steps + 3/game.steps
+            fitness = 7*score/(game.steps + 1) + 3/(game.steps+1)
             snake.fitness = fitness
 
 
