@@ -7,7 +7,7 @@ from pathlib import Path
 import game
 
 class Watch : 
-    def __init__(self):
+    def __init__(self): #Initialise les paramètres de la visualisation
         print("Quel est le score du serpent que vous voulez charger ?")
         x = input()
         x += ".snake"
@@ -15,7 +15,7 @@ class Watch :
                 weights = pickle.load(f)
         self.snake = Snake(ADN(weights))
 
-    def playing(self):
+    def playing(self): # Permet de visualiser le serpent jouer
         for i in range(10):
             game = game.SnakeGame(training = False, generation = 0)
             # game loop

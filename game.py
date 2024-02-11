@@ -26,7 +26,7 @@ GREEN1 = (153, 255, 51)
 GREEN2 = (178, 255, 102)
 
 BLOCK_SIZE = 64
-SPEED = 15
+SPEED = 100000000
 MAX_STEPS = 100
 
 class SnakeGame:
@@ -189,6 +189,9 @@ class SnakeGame:
             vision.append(1 if Point(self.x-64, self.y) == self.snake[-2] else 0)
             vision.append(1 if Point(self.x+64, self.y) == self.snake[-2] else 0)    
             return vision
+    
+
+                
         
     def _update_ui(self):
         for y in range(0, self.h, BLOCK_SIZE):
@@ -233,26 +236,3 @@ class SnakeGame:
             y -= BLOCK_SIZE
             
         self.head = Point(x, y)
-
-
-def main():
-    game = SnakeGame()
-    # game loop
-    while True:
-        game_over, score = game.play_step()
-        game.steps += 1
-        game.total_steps += 1
-        if game_over == True:
-            game.steps = 0
-            break
-        
-    print('-------------------------------------')
-    print('Final Score', score)
-    print('Total Steps', game.total_steps)
-    fitness = (score*score) * game.total_steps
-    print('Fitness = ', fitness) # Score de fitness pour comparer les individus
-
-if __name__ == '__main__':
-    main()
-        
-    

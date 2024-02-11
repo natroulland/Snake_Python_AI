@@ -1,11 +1,11 @@
 
 
 class Snake:
-    def __init__(self, adn):
+    def __init__(self, adn): # Initialise les paramètres du serpent
         self.fitness = 0
         self.adn = adn
 
-    def choose_move(self, vision):
+    def choose_move(self, vision): # Permet de choisir le mouvement à effectuer
         move = self.adn.getOutput(vision)
         move = move.tolist()
         choice = 0
@@ -15,6 +15,6 @@ class Snake:
                 choice = i
         return choice +1
     
-    def mate(self,other, mutationRate):
+    def mate(self,other, mutationRate): # Permet de croiser deux serpents
         newAdn = self.adn.mix(other.adn, mutationRate)
         return Snake(newAdn)

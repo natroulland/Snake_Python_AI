@@ -9,7 +9,7 @@ import add_values
 
 
 class SnakeTrainer:
-    def __init__(self, snakes = None):
+    def __init__(self, snakes = None): #Initialise les paramètres de l'entraînement
         self.bestFitness = 0
         self.bestScore = 0
         self.bestGenFitness = 0
@@ -27,13 +27,11 @@ class SnakeTrainer:
         self.bestSnake = self.snakes[0]
 
     
-    def training(self):
+    def training(self): # Permet de lancer le jeu, et de faire évoluer les générations
         bestScore = -1
         bestFitness = -1
         itEnd = 0
-
-        # Create new generations until the stop condition is satisfied
-        while self.generation < 200:
+        while itEnd < 200:
             print(
                 f"Generation {self.generation}, best: {bestScore}, bestfit: {bestFitness}"
             )
@@ -42,16 +40,14 @@ class SnakeTrainer:
             currentFitness = self.bestGenFitness
             self.change_generation()
 
-            # Check if the game score or fitness for this generation improved
             if currentScore <= bestScore and currentFitness <= bestFitness:
                 itEnd += 1
             else:
-                # Improvement + reset counter
                 bestScore = max(bestScore, currentScore)
                 bestFitness = max(bestFitness, currentFitness)
                 itEnd = 0
 
-    def change_generation(self):
+    def change_generation(self): # Lance l'alogirhtme génétique pour créer de nouvelles générations
         newSnakes = sorted(self.snakes, key=lambda x: x.fitness, reverse=True)
         newSnakes = newSnakes[:int(self.nbrSnakes*self.survivalProportion)]
         snakesToAdd = []
@@ -70,7 +66,7 @@ class SnakeTrainer:
         self.totalGenScore = 0
         self.generation += 1
 
-    def select_parents(self, matingSnakes):
+    def select_parents(self, matingSnakes): # Permet de choisir les parents pour la prochaine génération
         parents = []
         popSize = len(matingSnakes)
         totalFitness = popSize / 2 * (popSize + 1)
@@ -96,10 +92,9 @@ class SnakeTrainer:
         return parents
 
 
-    def playing(self):
+    def playing(self): # Permet de jouer une génération
         for snake in self.snakes:
             game = SnakeGame(training = True, generation = self.generation)
-            # game loop
             while True:
                 vision = game.vision()
                 j = snake.choose_move(vision)
@@ -109,7 +104,7 @@ class SnakeTrainer:
                 if game_over == True:
                     game.steps = 0
                     break
-            fitness = game.steps+(2**score+score**2.1*500)-((score**1.2)*((0.25*game.steps)**1.3))
+            fitness = 7*score/game.steps + 3/game.steps
             snake.fitness = fitness
 
 
@@ -126,15 +121,12 @@ class SnakeTrainer:
         print("Best score Generation : ", self.bestGenScore)
         print("Average score : ", self.totalGenScore/self.nbrSnakes)
         print("Total Score : ", self.totalGenScore)
-        # Lire les nouvelles valeurs depuis l'utilisateur
         nouvelles_valeurs = [self.generation, float(self.totalGenScore/self.nbrSnakes)]
 
         add_values.inscrire_et_modifier("valeurs_graphes.txt", nouvelles_valeurs)
 
-         # Save the weights and biases of the snakes for the new game scores
         files = listdir(Path("best_snakes"))
 
-        # If this is a new game score
         if str(self.bestGenScore) + ".snake" not in files:
             with open(
                 Path("best_snakes") / Path(str(self.bestGenScore) + ".snake"), "wb"
